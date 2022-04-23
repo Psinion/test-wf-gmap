@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -12,14 +13,20 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using GMap.NET.WindowsForms.ToolTips;
+using GmapImplementation.Data;
 
 namespace GmapImplementation
 {
     public partial class MainWindow : Form
     {
+        private MapModel mapModel;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            mapModel = new MapModel();
         }
 
         private void MainMapControl_Load(object sender, EventArgs e)
@@ -38,8 +45,14 @@ namespace GmapImplementation
             GMapOverlay markersOverlay = new GMapOverlay("markers");
             MainMapControl.Overlays.Add(markersOverlay);
 
-            GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(54.7, 82.90), GMarkerGoogleType.red);
-            markersOverlay.Markers.Add(marker);
+            foreach (Marker marker in mapModel.GetMarkers())
+            {
+                GMarkerGoogle gMarker = new GMarkerGoogle(marker.Coordinates, GMarkerGoogleType.red);
+                gMarker.ToolTip = new GMapRoundedToolTip(gMarker);
+                gMarker.ToolTipText = marker.Name;
+
+                markersOverlay.Markers.Add(gMarker);
+            }
         }
     }
 }
