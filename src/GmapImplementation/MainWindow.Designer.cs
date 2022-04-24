@@ -60,15 +60,18 @@
             this.MainMapControl.Size = new System.Drawing.Size(772, 430);
             this.MainMapControl.TabIndex = 0;
             this.MainMapControl.Zoom = 0D;
+            this.MainMapControl.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.MainMapControl_OnMarkerEnter);
             this.MainMapControl.Load += new System.EventHandler(this.MainMapControl_Load);
+            this.MainMapControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainMapControl_MouseMove);
+            this.MainMapControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainMapControl_MouseUp);
             // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(796, 454);
             this.Controls.Add(this.MainMapControl);
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "GmapImplementation";
             this.ResumeLayout(false);
 

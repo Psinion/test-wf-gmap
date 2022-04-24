@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GMap.NET;
+using GMap.NET.WindowsForms.Markers;
 
 namespace GmapImplementation.Data
 {
@@ -66,7 +69,28 @@ namespace GmapImplementation.Data
                 }
             }
 
+            dataReader.Close();
+
             return markers.ToArray();
+        }
+
+        public void SetMarker(Marker marker)
+        {
+            if (marker == null)
+                return;
+
+            string expression = "UPDATE markers " +
+                                "SET name = @name, lat = @lat, lng = @lng " +
+                                "WHERE id = @id";
+
+            SqlCommand command = new SqlCommand(expression, connection);
+
+            command.Parameters.Add(new SqlParameter("@name", marker.Name));
+            command.Parameters.Add(new SqlParameter("@lat", marker.Coordinates.Lat));
+            command.Parameters.Add(new SqlParameter("@lng", marker.Coordinates.Lng));
+            command.Parameters.Add(new SqlParameter("@id", marker.Id));
+
+            command.ExecuteNonQuery();
         }
     }
 }

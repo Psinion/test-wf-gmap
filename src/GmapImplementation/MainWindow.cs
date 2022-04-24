@@ -22,11 +22,17 @@ namespace GmapImplementation
     {
         private MapModel mapModel;
 
+        private Dictionary<GMapMarker, Marker> mapMarkers;
+
+        private GMapMarker selectedMarker;
+        private bool leftMouseButtonDown = false;
+
         public MainWindow()
         {
             InitializeComponent();
 
             mapModel = new MapModel();
+            mapMarkers = new Dictionary<GMapMarker, Marker>();
         }
 
         private void MainMapControl_Load(object sender, EventArgs e)
@@ -51,8 +57,33 @@ namespace GmapImplementation
                 gMarker.ToolTip = new GMapRoundedToolTip(gMarker);
                 gMarker.ToolTipText = marker.Name;
 
+                mapMarkers.Add(gMarker, marker);
                 markersOverlay.Markers.Add(gMarker);
             }
+        }
+
+        private void MainMapControl_OnMarkerEnter(GMapMarker item)
+        {
+            selectedMarker = item;
+        }
+
+        private void MainMapControl_MouseUp(object sender, MouseEventArgs e)
+        {
+            mapModel.SetMarker(mapMarkers[selectedMarker]);
+
+            selectedMarker = null;
+        }
+
+
+        private void MainMapControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && selectedMarker != null)
+            {
+                PointLatLng point = MainMapControl.FromLocalToLatLng(e.X, e.Y);
+
+                selectedMarker.Position = point;
+                mapMarkers[selectedMarker].Coordinates = selectedMarker.Position;
+            } 
         }
     }
 }
