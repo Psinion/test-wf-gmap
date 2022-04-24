@@ -69,6 +69,8 @@ namespace GmapImplementation
 
         private void MainMapControl_MouseUp(object sender, MouseEventArgs e)
         {
+            if (selectedMarker == null) return;
+
             mapModel.SetMarker(mapMarkers[selectedMarker]);
 
             selectedMarker = null;
